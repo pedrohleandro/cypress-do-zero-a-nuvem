@@ -1,25 +1,12 @@
-// ***********************************************
-// This example commands.js shows you how to
-// create various custom commands and overwrite
-// existing commands.
-//
-// For more comprehensive examples of custom
-// commands please read more here:
-// https://on.cypress.io/custom-commands
-// ***********************************************
-//
-//
-// -- This is a parent command --
-// Cypress.Commands.add('login', (email, password) => { ... })
-//
-//
-// -- This is a child command --
-// Cypress.Commands.add('drag', { prevSubject: 'element'}, (subject, options) => { ... })
-//
-//
-// -- This is a dual command --
-// Cypress.Commands.add('dismiss', { prevSubject: 'optional'}, (subject, options) => { ... })
-//
-//
-// -- This will overwrite an existing command --
-// Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
+Cypress.Commands.add('fillMandatoryFieldsAndSubmit' , () => {
+    cy.get('input[id="firstName"]').as('firstName').should('be.visible').type('Carlos',{delay: 100})
+    cy.get('@firstName').should('have.value','Carlos')
+    cy.get('input[id="lastName"]').as('lastName').should('be.visible').type('Antonio',{delay: 100})
+    cy.get('@lastName').should('have.value', 'Antonio')
+    cy.get('input[id="email"]').as('email').should('be.visible').type('Carlos@gmail.com',{delay: 0})
+    cy.get('@email').should('have.value', 'Carlos@gmail.com')
+    const longText = Cypress._.repeat('ABCDEFGHIJKLMNOPQRSTUVWYXZ', 10)
+    cy.get('textarea[id="open-text-area"]').as('openTextArea').should('be.visible').type(longText,{delay: 0})
+    cy.contains('Enviar').click()
+    cy.get('span.success > strong').should('contain.text', 'Mensagem enviada com sucesso.')
+  })
