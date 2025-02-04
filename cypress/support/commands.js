@@ -1,12 +1,13 @@
-Cypress.Commands.add('fillMandatoryFieldsAndSubmit' , () => {
-    cy.get('input[id="firstName"]').as('firstName').should('be.visible').type('Carlos',{delay: 100})
-    cy.get('@firstName').should('have.value','Carlos')
-    cy.get('input[id="lastName"]').as('lastName').should('be.visible').type('Antonio',{delay: 100})
-    cy.get('@lastName').should('have.value', 'Antonio')
-    cy.get('input[id="email"]').as('email').should('be.visible').type('Carlos@gmail.com',{delay: 0})
-    cy.get('@email').should('have.value', 'Carlos@gmail.com')
-    const longText = Cypress._.repeat('ABCDEFGHIJKLMNOPQRSTUVWYXZ', 10)
-    cy.get('textarea[id="open-text-area"]').as('openTextArea').should('be.visible').type(longText,{delay: 0})
-    cy.contains('Enviar').click()
-    cy.get('span.success > strong').should('contain.text', 'Mensagem enviada com sucesso.')
+Cypress.Commands.add('fillMandatoryFieldsAndSubmit' , (data = {
+  firstName: 'Jhon',
+  lastName: 'Doe',
+  email: 'jhon.doe@gmail.com',
+  text: 'text .'
+})=> {
+    cy.get('#firstName').type(data.firstName)
+    cy.get('#lastName').type(data.lastName)
+    cy.get('#email').type(data.email)
+    cy.get('#open-text-area').type(data.text)
+    cy.get('button[type="submit"]').click()
+    
   })

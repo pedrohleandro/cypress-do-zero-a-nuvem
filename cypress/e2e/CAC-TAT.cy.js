@@ -28,8 +28,8 @@ describe('Central de Atendimento ao Cliente TAT', () => {
     .invoke('val').should('be.empty');
   })
   it('Exibe mensagem de erro quando o telefone se torna obrigatório mas não é preenchido antes do envio do formulário', () => {
-    cy.get('#check input[id="phone-checkbox"]').click()
-    cy.contains('Enviar').click()
+    cy.get('#check input[id="phone-checkbox"]').check().should('be.checked')
+    cy.contains('button','Enviar').click()
     cy.get('span.error > strong')
     .should('contain.text', 'Valide os campos obrigatórios!')
   })
@@ -42,11 +42,48 @@ describe('Central de Atendimento ao Cliente TAT', () => {
     cy.get('span.error > strong')
     .should('contain.text', 'Valide os campos obrigatórios!')
   })
-  it.only('envia o formuário com sucesso usando um comando customizado' , () => {
+  it('envia o formuário com sucesso usando um comando customizado' , () => {
+    // const data = {
+    //   firstName: 'Marcelo',
+    //   lastName: 'Lima e Silva',
+    //   email:  'marcelo_lima@gmail.com',
+    //   text: 'ABCDEFGHIJKLMNOPQRSTUVWYXZ.'
+    // }
     cy.fillMandatoryFieldsAndSubmit()
-
     cy.get('.success').should('be.visible')
 
+  })
+  it('seleciona um produto (YouTube) por seu texto', () => {
+    cy.get('#product').select('YouTube').should('have.value', 'youtube')
+  })
+  it('seleciona um produto (Mentoria) por seu valor (value)', () => {
+    cy.get('#product').select('mentoria').should('have.value', 'mentoria')
+  })
+  it('seleciona um produto (Blog) por seu índice' , () => {
+    cy.get('#product').select(1).should('have.value', 'blog')
+  })
+  it('marca o tipo de atendimento "Feedback' , () => {
+    cy.get('input[type="radio"]').check('feedback').should('be.checked')
+  })
+  it('marca cada tipo de atendimento' , () => {
+    cy.get('input[type="radio"]')
+      .each(typeOfService => {
+        cy.wrap(typeOfService)
+          .check()
+          .should('be.checked')
+      })
+    // cy.get('input[type="radio"]').check('ajuda').should('be.checked')
+    // cy.get('input[type="radio"]').check('elogio').should('be.checked')
+    // cy.get('input[type="radio"]').check('feedback').should('be.checked')
+  })
+  it('marca ambos checkboxes, depois desmarca o último' , () => {
+    cy.get('input[type="checkbox"]').check().should('be.checked').last().uncheck().should('not.be.checked')
+  })
+  it.only('seleciona um arquivo da pasta fixtures' , () => {
+    cy.get('#file-upload').selectFile('cypress/fixtures/example.json')
+      .should((input) => {
+        expect(input[0].files[0].name).to.equal('example.json')
+    })
   })
 })
 
