@@ -65,7 +65,7 @@ describe('Central de Atendimento ao Cliente TAT', () => {
   it('marca o tipo de atendimento "Feedback' , () => {
     cy.get('input[type="radio"]').check('feedback').should('be.checked')
   })
-  it.only('marca cada tipo de atendimento' , () => {
+  it('marca cada tipo de atendimento' , () => {
     cy.get('input[type="radio"]')
       .each(typeOfService => {
         cy.wrap(typeOfService)
@@ -108,9 +108,17 @@ describe('Central de Atendimento ao Cliente TAT', () => {
     })
   })
 
-  
+  it('verifica que a política de privacidade abre em outra aba sem a necessidade de um clique', () => {
+    cy.contains('a','Política de Privacidade').should('have.attr', 'href', 'privacy.html')
+    .and('have.attr', 'target', '_blank')
+  })
 
+  it('acessa a página da política de privacidade removendo o target e então clicando no link', () => {
+    cy.contains('a','Política de Privacidade').invoke('removeAttr', 'target').click()
+    cy.contains('h1','CAC TAT - Política de Privacidade').should('be.visible')
+    })
 })
+
 // Function
 function preencherFormulario () {
   cy.get('input[id="firstName"]').as('firstName').should('be.visible').type('Carlos',{delay: 100})
